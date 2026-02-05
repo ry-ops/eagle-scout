@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120">
+  <defs>
+    <linearGradient id="eagleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a5f7a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#086f83;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#2d9cdb;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a5f7a;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="400" height="120" fill="#0d1117" rx="8"/>
+
+  <!-- Shield shape -->
+  <path d="M30 25 L70 25 L70 65 L50 85 L30 65 Z" fill="url(#shieldGrad)" stroke="#2d9cdb" stroke-width="2">
+    <animate attributeName="opacity" values="0.8;1;0.8" dur="2s" repeatCount="indefinite"/>
+  </path>
+
+  <!-- Eagle silhouette inside shield -->
+  <g transform="translate(50, 55)">
+    <!-- Eagle body -->
+    <path d="M0 -15 C-8 -18 -15 -10 -12 0 C-15 5 -10 12 0 8 C10 12 15 5 12 0 C15 -10 8 -18 0 -15"
+          fill="#0d1117" stroke="none">
+      <animate attributeName="d"
+               values="M0 -15 C-8 -18 -15 -10 -12 0 C-15 5 -10 12 0 8 C10 12 15 5 12 0 C15 -10 8 -18 0 -15;
+                       M0 -15 C-10 -20 -18 -10 -14 0 C-18 5 -12 14 0 10 C12 14 18 5 14 0 C18 -10 10 -20 0 -15;
+                       M0 -15 C-8 -18 -15 -10 -12 0 C-15 5 -10 12 0 8 C10 12 15 5 12 0 C15 -10 8 -18 0 -15"
+               dur="3s" repeatCount="indefinite"/>
+    </path>
+    <!-- Eagle wings spread -->
+    <path d="M-5 -5 L-18 -12 L-15 -5 L-5 0" fill="#0d1117">
+      <animate attributeName="d"
+               values="M-5 -5 L-18 -12 L-15 -5 L-5 0;M-5 -5 L-20 -15 L-17 -5 L-5 0;M-5 -5 L-18 -12 L-15 -5 L-5 0"
+               dur="1.5s" repeatCount="indefinite"/>
+    </path>
+    <path d="M5 -5 L18 -12 L15 -5 L5 0" fill="#0d1117">
+      <animate attributeName="d"
+               values="M5 -5 L18 -12 L15 -5 L5 0;M5 -5 L20 -15 L17 -5 L5 0;M5 -5 L18 -12 L15 -5 L5 0"
+               dur="1.5s" repeatCount="indefinite"/>
+    </path>
+  </g>
+
+  <!-- Scanning line effect -->
+  <rect x="32" y="27" width="36" height="2" fill="#00ff88" opacity="0.8">
+    <animate attributeName="y" values="27;80;27" dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.8;0.3;0.8" dur="2s" repeatCount="indefinite"/>
+  </rect>
+
+  <!-- Text: eagle-scout -->
+  <text x="95" y="58" font-family="Monaco, Consolas, monospace" font-size="32" font-weight="bold" fill="#ffffff">
+    eagle-scout
+  </text>
+
+  <!-- Subtitle -->
+  <text x="95" y="80" font-family="Monaco, Consolas, monospace" font-size="14" fill="#8b949e">
+    Container Security Scanner
+  </text>
+
+  <!-- Docker Scout badge -->
+  <g transform="translate(320, 95)">
+    <rect x="0" y="0" width="70" height="18" rx="3" fill="#1a5f7a"/>
+    <text x="35" y="13" font-family="Monaco, Consolas, monospace" font-size="10" fill="#ffffff" text-anchor="middle">
+      Docker Scout
+    </text>
+  </g>
+
+  <!-- Animated dots -->
+  <circle cx="370" cy="35" r="3" fill="#00ff88">
+    <animate attributeName="opacity" values="1;0.3;1" dur="1s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="380" cy="35" r="3" fill="#00ff88">
+    <animate attributeName="opacity" values="0.3;1;0.3" dur="1s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="390" cy="35" r="3" fill="#00ff88">
+    <animate attributeName="opacity" values="1;0.3;1" dur="1s" repeatCount="indefinite" begin="0.5s"/>
+  </circle>
+</svg>

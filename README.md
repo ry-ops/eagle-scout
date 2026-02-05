@@ -1,4 +1,8 @@
-# scout-mcp
+# eagle-scout
+
+<p align="center">
+  <img src="assets/eagle-scout-logo.svg" alt="eagle-scout logo" width="400"/>
+</p>
 
 **MCP Server for Docker Scout** - Container security scanning via Model Context Protocol.
 
@@ -25,18 +29,18 @@ Part of the [ry-ops](https://github.com/ry-ops) fabric ecosystem.
 ### From Source
 
 ```bash
-go install github.com/ry-ops/scout-mcp/cmd/scout-mcp@latest
+go install github.com/ry-ops/eagle-scout/cmd/eagle-scout@latest
 ```
 
 ### Docker
 
 ```bash
-docker pull ryops/scout-mcp:latest
+docker pull ryops/eagle-scout:latest
 ```
 
 ### Binary Release
 
-Download from [Releases](https://github.com/ry-ops/scout-mcp/releases).
+Download from [Releases](https://github.com/ry-ops/eagle-scout/releases).
 
 ## Usage
 
@@ -47,8 +51,8 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 ```json
 {
   "mcpServers": {
-    "scout-mcp": {
-      "command": "scout-mcp"
+    "eagle-scout": {
+      "command": "eagle-scout"
     }
   }
 }
@@ -59,9 +63,9 @@ Or with Docker:
 ```json
 {
   "mcpServers": {
-    "scout-mcp": {
+    "eagle-scout": {
       "command": "docker",
-      "args": ["run", "-i", "--rm", "-v", "/var/run/docker.sock:/var/run/docker.sock", "ryops/scout-mcp"]
+      "args": ["run", "-i", "--rm", "-v", "/var/run/docker.sock:/var/run/docker.sock", "ryops/eagle-scout"]
     }
   }
 }
@@ -110,27 +114,27 @@ Or with Docker:
 
 ## Fabric Ecosystem
 
-scout-mcp is part of the ry-ops fabric:
+eagle-scout is part of the ry-ops fabric:
 
 | Fabric | Language | Role |
 |--------|----------|------|
 | [git-steer](https://github.com/ry-ops/git-steer) | TypeScript | GitHub repo management |
 | [aiana](https://github.com/ry-ops/aiana) | Python | Semantic memory |
 | [n8n-fabric](https://github.com/ry-ops/n8n-fabric) | Python | Workflow automation |
-| **scout-mcp** | Go | Container security |
+| **eagle-scout** | Go | Container security |
 
 ## Development
 
 ```bash
 # Clone
-git clone https://github.com/ry-ops/scout-mcp
-cd scout-mcp
+git clone https://github.com/ry-ops/eagle-scout
+cd eagle-scout
 
 # Build
-go build -o scout-mcp ./cmd/scout-mcp
+go build -o eagle-scout ./cmd/eagle-scout
 
 # Run
-./scout-mcp
+./eagle-scout
 
 # Test
 go test ./...
@@ -142,6 +146,6 @@ MIT License - see [LICENSE](LICENSE) file.
 
 ---
 
-**Docker Hub:** [ryops/scout-mcp](https://hub.docker.com/r/ryops/scout-mcp)
+**Docker Hub:** [ryops/eagle-scout](https://hub.docker.com/r/ryops/eagle-scout)
 
 **Status:** Alpha

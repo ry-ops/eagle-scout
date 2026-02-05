@@ -1,5 +1,6 @@
-# Binaries
-scout-mcp
+# Binaries (root level only)
+/eagle-scout
+/scout-mcp
 *.exe
 *.dll
 *.so

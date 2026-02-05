@@ -1,3 +1,3 @@
-module github.com/ry-ops/scout-mcp
+module github.com/ry-ops/eagle-scout
 
 go 1.22

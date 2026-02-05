@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ry-ops/scout-mcp/internal/scout"
+	"github.com/ry-ops/eagle-scout/internal/scout"
 )
 
 // Server is the MCP server for Docker Scout
@@ -387,7 +387,7 @@ func (s *Server) handleInitialize(req *Request) {
 	result := InitializeResult{
 		ProtocolVersion: "2024-11-05",
 		ServerInfo: ServerInfo{
-			Name:    "scout-mcp",
+			Name:    "eagle-scout",
 			Version: s.version,
 		},
 		Capabilities: Capabilities{
