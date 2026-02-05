@@ -1,0 +1,11 @@
+# Code Owners for eagle-scout
+# These owners will be automatically requested for review
+
+# Default owner for everything
+* @ryandahlberg
+
+# Security-sensitive files require explicit review
+SECURITY.md @ryandahlberg
+Dockerfile @ryandahlberg
+go.mod @ryandahlberg
+.github/workflows/ @ryandahlberg
