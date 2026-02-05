@@ -459,12 +459,205 @@ func (c *Client) VexAdd(image string, opts VexOptions) (*VexOutput, error) {
 	}, nil
 }
 
+// VexList lists VEX statements for an image
+func (c *Client) VexList(image string, opts VexOptions) (*VexOutput, error) {
+	args := []string{"scout", "cves", image, "--vex-location", "image"}
+
+	output, err := c.run(args...)
+	if err != nil && output == "" {
+		return nil, err
+	}
+
+	return &VexOutput{
+		Image:     image,
+		Action:    "list",
+		Success:   true,
+		RawOutput: output,
+	}, nil
+}
+
 // VexOptions for VEX commands
 type VexOptions struct {
 	File          string
 	CVE           string
 	Status        string // not_affected, affected, fixed, under_investigation
 	Justification string
+}
+
+// EnvironmentOutput represents environment operations output
+type EnvironmentOutput struct {
+	Action       string   `json:"action"`
+	Environment  string   `json:"environment,omitempty"`
+	Image        string   `json:"image,omitempty"`
+	Environments []string `json:"environments,omitempty"`
+	Success      bool     `json:"success"`
+	RawOutput    string   `json:"raw_output"`
+}
+
+// EnvironmentList lists environments
+func (c *Client) EnvironmentList(opts EnvironmentOptions) (*EnvironmentOutput, error) {
+	args := []string{"scout", "environment"}
+
+	if opts.Org != "" {
+		args = append(args, "--org", opts.Org)
+	}
+
+	output, err := c.run(args...)
+	if err != nil {
+		return nil, err
+	}
+
+	return &EnvironmentOutput{
+		Action:    "list",
+		Success:   true,
+		RawOutput: output,
+	}, nil
+}
+
+// EnvironmentSet sets an image in an environment
+func (c *Client) EnvironmentSet(env, image string, opts EnvironmentOptions) (*EnvironmentOutput, error) {
+	args := []string{"scout", "environment", env, image}
+
+	if opts.Org != "" {
+		args = append(args, "--org", opts.Org)
+	}
+
+	output, err := c.run(args...)
+	if err != nil {
+		return nil, err
+	}
+
+	return &EnvironmentOutput{
+		Action:      "set",
+		Environment: env,
+		Image:       image,
+		Success:     true,
+		RawOutput:   output,
+	}, nil
+}
+
+// EnvironmentOptions for Environment commands
+type EnvironmentOptions struct {
+	Org string
+}
+
+// CacheOutput represents cache operations output
+type CacheOutput struct {
+	Action    string `json:"action"`
+	Success   bool   `json:"success"`
+	Size      string `json:"size,omitempty"`
+	RawOutput string `json:"raw_output"`
+}
+
+// CachePrune prunes the local cache
+func (c *Client) CachePrune() (*CacheOutput, error) {
+	output, err := c.run("scout", "cache", "prune", "--force")
+	if err != nil {
+		return nil, err
+	}
+
+	return &CacheOutput{
+		Action:    "prune",
+		Success:   true,
+		RawOutput: output,
+	}, nil
+}
+
+// CacheDF shows cache disk usage
+func (c *Client) CacheDF() (*CacheOutput, error) {
+	output, err := c.run("scout", "cache", "df")
+	if err != nil {
+		return nil, err
+	}
+
+	return &CacheOutput{
+		Action:    "df",
+		Success:   true,
+		RawOutput: output,
+	}, nil
+}
+
+// EnrollOutput represents enrollment output
+type EnrollOutput struct {
+	Org       string `json:"org"`
+	Success   bool   `json:"success"`
+	RawOutput string `json:"raw_output"`
+}
+
+// Enroll enrolls an organization with Docker Scout
+func (c *Client) Enroll(org string) (*EnrollOutput, error) {
+	args := []string{"scout", "enroll", org}
+
+	output, err := c.run(args...)
+	if err != nil {
+		return nil, err
+	}
+
+	return &EnrollOutput{
+		Org:       org,
+		Success:   true,
+		RawOutput: output,
+	}, nil
+}
+
+// WatchOutput represents watch configuration output
+type WatchOutput struct {
+	Repository string `json:"repository"`
+	Action     string `json:"action"`
+	Success    bool   `json:"success"`
+	RawOutput  string `json:"raw_output"`
+}
+
+// WatchEnable enables continuous monitoring for a repository
+func (c *Client) WatchEnable(repo string, opts WatchOptions) (*WatchOutput, error) {
+	// Watch is enabled via repo enable with integration
+	args := []string{"scout", "repo", "enable", repo}
+
+	if opts.Org != "" {
+		args = append(args, "--org", opts.Org)
+	}
+	if opts.Integration != "" {
+		args = append(args, "--integration", opts.Integration)
+	}
+
+	output, err := c.run(args...)
+	if err != nil {
+		return nil, err
+	}
+
+	return &WatchOutput{
+		Repository: repo,
+		Action:     "enable",
+		Success:    true,
+		RawOutput:  output,
+	}, nil
+}
+
+// WatchDisable disables continuous monitoring
+func (c *Client) WatchDisable(repo string, opts WatchOptions) (*WatchOutput, error) {
+	args := []string{"scout", "repo", "disable", repo}
+
+	if opts.Org != "" {
+		args = append(args, "--org", opts.Org)
+	}
+
+	output, err := c.run(args...)
+	if err != nil {
+		return nil, err
+	}
+
+	return &WatchOutput{
+		Repository: repo,
+		Action:     "disable",
+		Success:    true,
+		RawOutput:  output,
+	}, nil
+}
+
+// WatchOptions for Watch commands
+type WatchOptions struct {
+	Org         string
+	Integration string // github, gitlab, etc.
 }
 
 // VersionInfo represents scout version information

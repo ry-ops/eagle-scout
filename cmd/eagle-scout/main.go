@@ -8,7 +8,7 @@ import (
 	"github.com/ry-ops/eagle-scout/internal/mcp"
 )
 
-var version = "1.0.0"
+var version = "1.1.0"
 
 func main() {
 	if len(os.Args) > 1 {
@@ -51,7 +51,11 @@ The MCP server exposes Docker Scout functionality as tools:
   - scout_policy         Evaluate security policies
   - scout_attestation    Manage attestations
   - scout_repo           Manage Scout-enabled repos
-  - scout_vex            Manage VEX statements
+  - scout_vex            Manage VEX statements (add/list)
+  - scout_environment    Manage environments (list/set)
+  - scout_cache          Manage local cache (df/prune)
+  - scout_enroll         Enroll organization
+  - scout_watch          Enable/disable continuous monitoring
 
 For more info: https://github.com/ry-ops/eagle-scout`)
 }

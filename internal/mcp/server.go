@@ -293,14 +293,14 @@ var tools = []Tool{
 	},
 	{
 		Name:        "scout_vex",
-		Description: "Manage VEX (Vulnerability Exploitability eXchange) statements",
+		Description: "Manage VEX (Vulnerability Exploitability eXchange) statements - mark CVEs as not applicable or provide risk context",
 		InputSchema: InputSchema{
 			Type: "object",
 			Properties: map[string]Property{
 				"action": {
 					Type:        "string",
 					Description: "Action to perform",
-					Enum:        []string{"add"},
+					Enum:        []string{"add", "list"},
 				},
 				"image": {
 					Type:        "string",
@@ -308,11 +308,11 @@ var tools = []Tool{
 				},
 				"cve": {
 					Type:        "string",
-					Description: "CVE ID (e.g., 'CVE-2024-1234')",
+					Description: "CVE ID (e.g., 'CVE-2024-1234') - required for add",
 				},
 				"status": {
 					Type:        "string",
-					Description: "VEX status",
+					Description: "VEX status - required for add",
 					Enum:        []string{"not_affected", "affected", "fixed", "under_investigation"},
 				},
 				"justification": {
@@ -325,6 +325,90 @@ var tools = []Tool{
 				},
 			},
 			Required: []string{"action", "image"},
+		},
+	},
+	{
+		Name:        "scout_environment",
+		Description: "Manage environments for policy evaluation - assign images to production, staging, etc.",
+		InputSchema: InputSchema{
+			Type: "object",
+			Properties: map[string]Property{
+				"action": {
+					Type:        "string",
+					Description: "Action to perform",
+					Enum:        []string{"list", "set"},
+				},
+				"env": {
+					Type:        "string",
+					Description: "Environment name (for set action)",
+				},
+				"image": {
+					Type:        "string",
+					Description: "Image to assign to environment (for set action)",
+				},
+				"org": {
+					Type:        "string",
+					Description: "Docker organization",
+				},
+			},
+			Required: []string{"action"},
+		},
+	},
+	{
+		Name:        "scout_cache",
+		Description: "Manage local Docker Scout cache",
+		InputSchema: InputSchema{
+			Type: "object",
+			Properties: map[string]Property{
+				"action": {
+					Type:        "string",
+					Description: "Action to perform",
+					Enum:        []string{"df", "prune"},
+				},
+			},
+			Required: []string{"action"},
+		},
+	},
+	{
+		Name:        "scout_enroll",
+		Description: "Enroll an organization with Docker Scout",
+		InputSchema: InputSchema{
+			Type: "object",
+			Properties: map[string]Property{
+				"org": {
+					Type:        "string",
+					Description: "Organization to enroll",
+				},
+			},
+			Required: []string{"org"},
+		},
+	},
+	{
+		Name:        "scout_watch",
+		Description: "Enable/disable continuous monitoring for a repository",
+		InputSchema: InputSchema{
+			Type: "object",
+			Properties: map[string]Property{
+				"action": {
+					Type:        "string",
+					Description: "Action to perform",
+					Enum:        []string{"enable", "disable"},
+				},
+				"repo": {
+					Type:        "string",
+					Description: "Repository to monitor",
+				},
+				"org": {
+					Type:        "string",
+					Description: "Docker organization",
+				},
+				"integration": {
+					Type:        "string",
+					Description: "Integration type (for enable)",
+					Enum:        []string{"github", "gitlab", "azure"},
+				},
+			},
+			Required: []string{"action", "repo"},
 		},
 	},
 	{
@@ -554,8 +638,72 @@ func (s *Server) executeTool(name string, args map[string]interface{}) (interfac
 		switch action {
 		case "add":
 			return s.scout.VexAdd(image, opts)
+		case "list":
+			return s.scout.VexList(image, opts)
 		default:
 			return nil, fmt.Errorf("unsupported vex action: %s", action)
+		}
+
+	case "scout_environment":
+		action, _ := args["action"].(string)
+		if action == "" {
+			return nil, fmt.Errorf("action is required")
+		}
+		opts := scout.EnvironmentOptions{
+			Org: getString(args, "org"),
+		}
+		switch action {
+		case "list":
+			return s.scout.EnvironmentList(opts)
+		case "set":
+			env := getString(args, "env")
+			image := getString(args, "image")
+			if env == "" || image == "" {
+				return nil, fmt.Errorf("env and image are required for set action")
+			}
+			return s.scout.EnvironmentSet(env, image, opts)
+		default:
+			return nil, fmt.Errorf("unsupported environment action: %s", action)
+		}
+
+	case "scout_cache":
+		action, _ := args["action"].(string)
+		if action == "" {
+			return nil, fmt.Errorf("action is required")
+		}
+		switch action {
+		case "df":
+			return s.scout.CacheDF()
+		case "prune":
+			return s.scout.CachePrune()
+		default:
+			return nil, fmt.Errorf("unsupported cache action: %s", action)
+		}
+
+	case "scout_enroll":
+		org := getString(args, "org")
+		if org == "" {
+			return nil, fmt.Errorf("org is required")
+		}
+		return s.scout.Enroll(org)
+
+	case "scout_watch":
+		action, _ := args["action"].(string)
+		repo := getString(args, "repo")
+		if action == "" || repo == "" {
+			return nil, fmt.Errorf("action and repo are required")
+		}
+		opts := scout.WatchOptions{
+			Org:         getString(args, "org"),
+			Integration: getString(args, "integration"),
+		}
+		switch action {
+		case "enable":
+			return s.scout.WatchEnable(repo, opts)
+		case "disable":
+			return s.scout.WatchDisable(repo, opts)
+		default:
+			return nil, fmt.Errorf("unsupported watch action: %s", action)
 		}
 
 	case "scout_version":
