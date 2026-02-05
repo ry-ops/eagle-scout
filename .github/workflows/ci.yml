@@ -7,8 +7,8 @@ on:
     branches: [main]
 
 env:
-  REGISTRY: docker.io
-  IMAGE_NAME: ryops/eagle-scout
+  DOCKERHUB_IMAGE: ryops/eagle-scout
+  GHCR_IMAGE: ghcr.io/ry-ops/eagle-scout
 
 jobs:
   # ============================================
@@ -46,13 +46,49 @@ jobs:
       - name: Verify binary
         run: ./eagle-scout version
 
+      - name: Generate coverage report
+        run: go test -coverprofile=coverage.out ./...
+
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage.out
+
   # ============================================
-  # Stage 2: Security Scan (Gate)
+  # Stage 2: Code Quality (SonarCloud)
+  # ============================================
+  sonarcloud:
+    name: SonarCloud Analysis
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for better analysis
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.25'
+
+      - name: Generate coverage
+        run: go test -coverprofile=coverage.out ./...
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v3
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ============================================
+  # Stage 4: Security Scan (Gate)
   # ============================================
   security-scan:
     name: Security Scan
     runs-on: ubuntu-latest
-    needs: build
+    needs: [build, sonarcloud]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -65,7 +101,7 @@ jobs:
         with:
           context: .
           load: true
-          tags: ${{ env.IMAGE_NAME }}:scan
+          tags: ${{ env.DOCKERHUB_IMAGE }}:scan
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -73,7 +109,7 @@ jobs:
         uses: docker/scout-action@v1
         with:
           command: quickview
-          image: ${{ env.IMAGE_NAME }}:scan
+          image: ${{ env.DOCKERHUB_IMAGE }}:scan
           only-severities: critical,high
           summary: true
 
@@ -81,7 +117,7 @@ jobs:
         uses: docker/scout-action@v1
         with:
           command: cves
-          image: ${{ env.IMAGE_NAME }}:scan
+          image: ${{ env.DOCKERHUB_IMAGE }}:scan
           only-severities: critical,high
           exit-code: true
           # Fail if critical/high CVEs with fixes available
@@ -91,7 +127,7 @@ jobs:
         uses: docker/scout-action@v1
         with:
           command: sbom
-          image: ${{ env.IMAGE_NAME }}:scan
+          image: ${{ env.DOCKERHUB_IMAGE }}:scan
           output: sbom.json
 
       - name: Upload SBOM
@@ -101,12 +137,12 @@ jobs:
           path: sbom.json
 
   # ============================================
-  # Stage 3: Policy Check (Gate)
+  # Stage 5: Policy Check (Gate)
   # ============================================
   policy-check:
     name: Policy Check
     runs-on: ubuntu-latest
-    needs: build
+    needs: [build, sonarcloud]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -119,11 +155,11 @@ jobs:
         with:
           context: .
           load: true
-          tags: ${{ env.IMAGE_NAME }}:scan
+          tags: ${{ env.DOCKERHUB_IMAGE }}:scan
 
       - name: Check - Non-root user
         run: |
-          USER=$(docker inspect ${{ env.IMAGE_NAME }}:scan --format '{{.Config.User}}')
+          USER=$(docker inspect ${{ env.DOCKERHUB_IMAGE }}:scan --format '{{.Config.User}}')
           if [ -z "$USER" ] || [ "$USER" = "root" ] || [ "$USER" = "0" ]; then
             echo "::error::Container runs as root. Must specify non-root USER."
             exit 1
@@ -133,7 +169,7 @@ jobs:
       - name: Check - No secrets in image
         run: |
           # Check for common secret patterns
-          docker run --rm --entrypoint="" ${{ env.IMAGE_NAME }}:scan sh -c "
+          docker run --rm --entrypoint="" ${{ env.DOCKERHUB_IMAGE }}:scan sh -c "
             if ls /.env /app/.env /etc/secrets 2>/dev/null; then
               echo 'Found potential secrets!'
               exit 1
@@ -144,7 +180,7 @@ jobs:
       - name: Check - Minimal attack surface
         run: |
           # Verify no unnecessary tools
-          docker run --rm --entrypoint="" ${{ env.IMAGE_NAME }}:scan sh -c "
+          docker run --rm --entrypoint="" ${{ env.DOCKERHUB_IMAGE }}:scan sh -c "
             for cmd in curl wget nc netcat python perl; do
               if command -v \$cmd >/dev/null 2>&1; then
                 echo \"Warning: \$cmd found in image\"
@@ -153,7 +189,7 @@ jobs:
           " || true
 
   # ============================================
-  # Stage 4: Build & Push (main branch only)
+  # Stage 6: Build & Push (main branch only)
   # ============================================
   publish:
     name: Publish
@@ -177,11 +213,20 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Extract metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: |
+            ${{ env.DOCKERHUB_IMAGE }}
+            ${{ env.GHCR_IMAGE }}
           tags: |
             type=raw,value=${{ needs.build.outputs.version }}
             type=raw,value=latest
@@ -202,5 +247,5 @@ jobs:
         uses: docker/scout-action@v1
         with:
           command: quickview
-          image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.build.outputs.version }}
+          image: ${{ env.DOCKERHUB_IMAGE }}:${{ needs.build.outputs.version }}
           summary: true
