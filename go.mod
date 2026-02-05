@@ -1,3 +1,3 @@
 module github.com/ry-ops/eagle-scout
 
-go 1.24
+go 1.25
