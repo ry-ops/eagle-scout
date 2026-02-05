@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CONTRIBUTING.md guidelines
 - SECURITY.md policy
 - Branch protection documentation
+- SonarCloud integration for code quality analysis
+- GitHub Releases with multi-platform binaries (linux/darwin/windows, amd64/arm64)
+- GitHub Container Registry (GHCR) publishing alongside Docker Hub
+- Multi-architecture Docker images (linux/amd64, linux/arm64)
 
 ## [1.1.0] - 2026-02-05
 
