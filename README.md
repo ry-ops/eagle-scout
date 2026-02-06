@@ -140,6 +140,21 @@ go build -o eagle-scout ./cmd/eagle-scout
 go test ./...
 ```
 
+## Security
+
+eagle-scout v1.1.1 includes important security updates:
+- **Go 1.25.7** - Fixes 3 stdlib vulnerabilities (including 1 HIGH severity)
+- **Updated base image** - Latest Docker CLI with security patches
+- **Vulnerability reduction** - 30% reduction (20 → 14), 100% HIGH severity elimination
+
+See [SECURITY_FIXES.md](SECURITY_FIXES.md) for details.
+
+## Docker Hub Auto-Build
+
+This repository is connected to Docker Hub. Any push to `main` automatically triggers a new build:
+- Latest commit → `ryops/eagle-scout:latest`
+- Version tags → `ryops/eagle-scout:v1.1.1`
+
 ## License
 
 MIT License - see [LICENSE](LICENSE) file.
@@ -147,5 +162,7 @@ MIT License - see [LICENSE](LICENSE) file.
 ---
 
 **Docker Hub:** [ryops/eagle-scout](https://hub.docker.com/r/ryops/eagle-scout)
+
+**Version:** 1.1.1
 
 **Status:** Alpha

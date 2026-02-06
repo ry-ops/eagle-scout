@@ -1,7 +1,8 @@
 # eagle-scout - Docker Scout MCP Server
 # Multi-stage build for minimal production image
 
-FROM golang:1.25-alpine AS builder
+# Use latest Go 1.25 patch to fix stdlib vulnerabilities
+FROM golang:1.25.7-alpine AS builder
 
 WORKDIR /app
 
@@ -21,7 +22,8 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o /eagle-scout ./cmd/eagle-scout
 
 # Production stage - use docker CLI image as base for scout access
-FROM docker:cli
+# Use Docker 29 CLI (includes latest Alpine base)
+FROM docker:29-cli
 
 LABEL org.opencontainers.image.title="eagle-scout"
 LABEL org.opencontainers.image.description="MCP server for Docker Scout - container security scanning"
