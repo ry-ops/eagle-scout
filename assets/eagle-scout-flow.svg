@@ -1,0 +1,241 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <!-- Gradient definitions -->
+    <linearGradient id="claudeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6B46C1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#9333EA;stop-opacity:1" />
+    </linearGradient>
+
+    <linearGradient id="eagleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#059669;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#10B981;stop-opacity:1" />
+    </linearGradient>
+
+    <linearGradient id="scoutGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0EA5E9;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#06B6D4;stop-opacity:1" />
+    </linearGradient>
+
+    <linearGradient id="dockerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2563EB;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1D4ED8;stop-opacity:1" />
+    </linearGradient>
+
+    <!-- Arrow marker -->
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#64748B" />
+    </marker>
+
+    <!-- Glow effect -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Data flow animation -->
+    <style>
+      @keyframes flowDown {
+        0%, 100% { opacity: 0; transform: translateY(0); }
+        50% { opacity: 1; transform: translateY(20px); }
+      }
+
+      @keyframes flowUp {
+        0%, 100% { opacity: 0; transform: translateY(0); }
+        50% { opacity: 1; transform: translateY(-20px); }
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 0.6; }
+        50% { opacity: 1; }
+      }
+
+      @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+
+      .flow-particle-down {
+        animation: flowDown 2s ease-in-out infinite;
+      }
+
+      .flow-particle-up {
+        animation: flowUp 2s ease-in-out infinite;
+      }
+
+      .pulse {
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      .rotate {
+        transform-origin: center;
+        animation: rotate 4s linear infinite;
+      }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="600" fill="#0F172A"/>
+
+  <!-- Title -->
+  <text x="400" y="40" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#F1F5F9" text-anchor="middle">
+    eagle-scout Architecture Flow
+  </text>
+
+  <!-- User / AI Assistant Layer -->
+  <g id="user-layer">
+    <rect x="50" y="80" width="200" height="100" rx="10" fill="url(#claudeGradient)" filter="url(#glow)"/>
+    <text x="150" y="115" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white" text-anchor="middle">
+      AI Assistant
+    </text>
+    <text x="150" y="140" font-family="Arial, sans-serif" font-size="14" fill="#E0E7FF" text-anchor="middle">
+      (Claude / ChatGPT)
+    </text>
+    <text x="150" y="160" font-family="monospace" font-size="11" fill="#C7D2FE" text-anchor="middle">
+      "Scan nginx:latest"
+    </text>
+  </g>
+
+  <!-- MCP Protocol Label -->
+  <text x="150" y="210" font-family="Arial, sans-serif" font-size="12" fill="#94A3B8" text-anchor="middle">
+    MCP Protocol
+  </text>
+
+  <!-- Flow arrow down (User to eagle-scout) -->
+  <line x1="150" y1="180" x2="150" y2="230" stroke="#64748B" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <circle cx="150" cy="195" r="4" fill="#06B6D4" class="flow-particle-down" style="animation-delay: 0s;"/>
+  <circle cx="150" cy="195" r="4" fill="#06B6D4" class="flow-particle-down" style="animation-delay: 0.5s;"/>
+  <circle cx="150" cy="195" r="4" fill="#06B6D4" class="flow-particle-down" style="animation-delay: 1s;"/>
+
+  <!-- eagle-scout MCP Server Layer -->
+  <g id="eagle-layer">
+    <rect x="50" y="240" width="200" height="120" rx="10" fill="url(#eagleGradient)" filter="url(#glow)"/>
+    <text x="150" y="275" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="white" text-anchor="middle">
+      🦅 eagle-scout
+    </text>
+    <text x="150" y="295" font-family="Arial, sans-serif" font-size="13" fill="#D1FAE5" text-anchor="middle">
+      MCP Server
+    </text>
+
+    <!-- Features list -->
+    <text x="70" y="318" font-family="monospace" font-size="10" fill="#A7F3D0">• Parse MCP request</text>
+    <text x="70" y="333" font-family="monospace" font-size="10" fill="#A7F3D0">• Translate to Scout CLI</text>
+    <text x="70" y="348" font-family="monospace" font-size="10" fill="#A7F3D0">• Format JSON response</text>
+  </g>
+
+  <!-- Docker Scout CLI Label -->
+  <text x="150" y="390" font-family="Arial, sans-serif" font-size="12" fill="#94A3B8" text-anchor="middle">
+    CLI Commands
+  </text>
+
+  <!-- Flow arrow down (eagle-scout to Docker Scout) -->
+  <line x1="150" y1="360" x2="150" y2="410" stroke="#64748B" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <circle cx="150" cy="375" r="4" fill="#10B981" class="flow-particle-down" style="animation-delay: 0.3s;"/>
+  <circle cx="150" cy="375" r="4" fill="#10B981" class="flow-particle-down" style="animation-delay: 0.8s;"/>
+
+  <!-- Docker Scout Layer -->
+  <g id="scout-layer">
+    <rect x="50" y="420" width="200" height="100" rx="10" fill="url(#scoutGradient)" filter="url(#glow)"/>
+    <text x="150" y="455" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="white" text-anchor="middle">
+      Docker Scout
+    </text>
+    <text x="150" y="475" font-family="Arial, sans-serif" font-size="13" fill="#E0F2FE" text-anchor="middle">
+      Security Engine
+    </text>
+    <text x="150" y="495" font-family="monospace" font-size="10" fill="#BAE6FD" text-anchor="middle">
+      scout cves nginx:latest
+    </text>
+  </g>
+
+  <!-- Docker Images Label -->
+  <text x="400" y="485" font-family="Arial, sans-serif" font-size="12" fill="#94A3B8" text-anchor="middle">
+    Analyzes
+  </text>
+
+  <!-- Flow arrow right (Docker Scout to Docker Images) -->
+  <line x1="250" y1="470" x2="330" y2="470" stroke="#64748B" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <circle cx="275" cy="470" r="4" fill="#0EA5E9" class="pulse" style="animation-delay: 0s;"/>
+
+  <!-- Docker Images Layer -->
+  <g id="docker-layer">
+    <rect x="340" y="420" width="200" height="100" rx="10" fill="url(#dockerGradient)" filter="url(#glow)"/>
+    <text x="440" y="455" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="white" text-anchor="middle">
+      Container Images
+    </text>
+
+    <!-- Docker icons -->
+    <g transform="translate(380, 470)">
+      <circle cx="0" cy="0" r="15" fill="#1E40AF" stroke="#60A5FA" stroke-width="2"/>
+      <text x="0" y="5" font-family="Arial, sans-serif" font-size="10" fill="white" text-anchor="middle">IMG</text>
+    </g>
+    <g transform="translate(440, 470)">
+      <circle cx="0" cy="0" r="15" fill="#1E40AF" stroke="#60A5FA" stroke-width="2"/>
+      <text x="0" y="5" font-family="Arial, sans-serif" font-size="10" fill="white" text-anchor="middle">IMG</text>
+    </g>
+    <g transform="translate(500, 470)">
+      <circle cx="0" cy="0" r="15" fill="#1E40AF" stroke="#60A5FA" stroke-width="2"/>
+      <text x="0" y="5" font-family="Arial, sans-serif" font-size="10" fill="white" text-anchor="middle">IMG</text>
+    </g>
+  </g>
+
+  <!-- Results Section -->
+  <g id="results">
+    <rect x="550" y="80" width="200" height="440" rx="10" fill="#1E293B" stroke="#334155" stroke-width="2"/>
+    <text x="650" y="110" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#F1F5F9" text-anchor="middle">
+      Scan Results
+    </text>
+
+    <!-- Grade badge -->
+    <circle cx="650" cy="150" r="30" fill="#059669" class="pulse"/>
+    <text x="650" y="160" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="white" text-anchor="middle">A</text>
+
+    <!-- CVE Stats -->
+    <g transform="translate(570, 200)">
+      <text x="0" y="0" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#F1F5F9">Vulnerabilities:</text>
+      <rect x="0" y="10" width="140" height="20" rx="3" fill="#DC2626"/>
+      <text x="70" y="25" font-family="Arial, sans-serif" font-size="12" fill="white" text-anchor="middle">HIGH: 0</text>
+
+      <rect x="0" y="35" width="140" height="20" rx="3" fill="#F59E0B"/>
+      <text x="70" y="50" font-family="Arial, sans-serif" font-size="12" fill="white" text-anchor="middle">MEDIUM: 6</text>
+
+      <rect x="0" y="60" width="140" height="20" rx="3" fill="#10B981"/>
+      <text x="70" y="75" font-family="Arial, sans-serif" font-size="12" fill="white" text-anchor="middle">LOW: 8</text>
+    </g>
+
+    <!-- Tools list -->
+    <g transform="translate(570, 310)">
+      <text x="0" y="0" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#F1F5F9">Available Tools:</text>
+      <text x="0" y="20" font-family="monospace" font-size="10" fill="#94A3B8">✓ scout_cves</text>
+      <text x="0" y="35" font-family="monospace" font-size="10" fill="#94A3B8">✓ scout_quickview</text>
+      <text x="0" y="50" font-family="monospace" font-size="10" fill="#94A3B8">✓ scout_compare</text>
+      <text x="0" y="65" font-family="monospace" font-size="10" fill="#94A3B8">✓ scout_sbom</text>
+      <text x="0" y="80" font-family="monospace" font-size="10" fill="#94A3B8">✓ scout_recommendations</text>
+      <text x="0" y="95" font-family="monospace" font-size="10" fill="#94A3B8">✓ scout_policy</text>
+      <text x="0" y="110" font-family="monospace" font-size="10" fill="#94A3B8">+ 7 more tools...</text>
+    </g>
+  </g>
+
+  <!-- Return arrow (curved from scout back to user) -->
+  <path d="M 250 300 Q 400 300, 400 130" stroke="#64748B" stroke-width="2" fill="none" marker-end="url(#arrowhead)" stroke-dasharray="5,5"/>
+  <text x="360" y="210" font-family="Arial, sans-serif" font-size="11" fill="#94A3B8">JSON Response</text>
+  <circle cx="320" cy="280" r="4" fill="#10B981" class="flow-particle-up" style="animation-delay: 0.2s;"/>
+  <circle cx="360" cy="220" r="4" fill="#10B981" class="flow-particle-up" style="animation-delay: 0.7s;"/>
+  <circle cx="390" cy="160" r="4" fill="#10B981" class="flow-particle-up" style="animation-delay: 1.2s;"/>
+
+  <!-- Legend -->
+  <g id="legend" transform="translate(320, 540)">
+    <text x="0" y="0" font-family="Arial, sans-serif" font-size="11" fill="#94A3B8">
+      Flow: User Request → MCP → eagle-scout → Docker Scout → Analysis → Results
+    </text>
+  </g>
+
+  <!-- Rotating gear icon (processing indicator) -->
+  <g transform="translate(650, 480)">
+    <circle cx="0" cy="0" r="25" fill="#334155" class="rotate"/>
+    <path d="M -8,-8 L -8,-15 L 8,-15 L 8,-8 M 8,8 L 8,15 L -8,15 L -8,8 M -15,-8 L -15,8 L -8,8 L -8,-8 M 15,-8 L 15,8 L 8,8 L 8,-8"
+          fill="#475569" class="rotate"/>
+    <circle cx="0" cy="0" r="8" fill="#1E293B"/>
+  </g>
+</svg>

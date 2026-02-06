@@ -12,6 +12,14 @@
 
 Part of the [ry-ops](https://github.com/ry-ops) fabric ecosystem.
 
+## How It Works
+
+<p align="center">
+  <img src="assets/eagle-scout-flow.svg" alt="eagle-scout architecture flow" width="100%"/>
+</p>
+
+eagle-scout acts as a bridge between AI assistants and Docker Scout, translating natural language requests into security scans and returning structured results.
+
 ## Features
 
 - **CVE Scanning** - Scan container images for vulnerabilities
