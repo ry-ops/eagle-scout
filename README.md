@@ -6,6 +6,10 @@
 
 **MCP Server for Docker Scout** - Container security scanning via Model Context Protocol.
 
+[![Docker Scout Grade](https://img.shields.io/badge/Docker_Scout-Grade_A-success)](https://hub.docker.com/r/ryops/eagle-scout)
+[![Security](https://img.shields.io/badge/vulnerabilities-14-yellow)](https://github.com/ry-ops/eagle-scout/blob/main/SECURITY_FIXES.md)
+[![Version](https://img.shields.io/badge/version-1.1.1-blue)](https://github.com/ry-ops/eagle-scout/releases/tag/v1.1.1)
+
 Part of the [ry-ops](https://github.com/ry-ops) fabric ecosystem.
 
 ## Features
