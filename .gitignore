@@ -28,3 +28,15 @@ Thumbs.db
 # Build
 dist/
 bin/
+
+# Secrets and credentials
+.env
+.env.*
+*.pem
+*.key
+*.crt
+*.cert
+*.p12
+*.pfx
+secrets/
+credentials/
