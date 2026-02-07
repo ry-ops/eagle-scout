@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.5] - 2026-02-07
+
+### Security
+- Updated Docker Scout CLI from v1.19.0 to v1.19.2 (built with Go 1.25.6)
+  - CVE-2025-61726 (high 7.5) - FIXED in Scout CLI layer (was passing CI gate with --ignore-base)
+
 ## [1.2.4] - 2026-02-07
 
 ### Security
@@ -108,7 +114,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-[Unreleased]: https://github.com/ry-ops/eagle-scout/compare/v1.2.4...HEAD
+[Unreleased]: https://github.com/ry-ops/eagle-scout/compare/v1.2.5...HEAD
+[1.2.5]: https://github.com/ry-ops/eagle-scout/compare/v1.2.4...v1.2.5
 [1.2.4]: https://github.com/ry-ops/eagle-scout/compare/v1.2.3...v1.2.4
 [1.2.3]: https://github.com/ry-ops/eagle-scout/compare/v1.2.2...v1.2.3
 [1.2.2]: https://github.com/ry-ops/eagle-scout/compare/v1.2.1...v1.2.2
