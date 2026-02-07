@@ -30,6 +30,9 @@ LABEL org.opencontainers.image.description="MCP server for Docker Scout - contai
 LABEL org.opencontainers.image.source="https://github.com/ry-ops/eagle-scout"
 LABEL org.opencontainers.image.licenses="MIT"
 
+# Install Docker Scout CLI plugin
+COPY --from=docker/scout-cli /docker-scout /usr/libexec/docker/cli-plugins/docker-scout
+
 # Copy binary from builder
 COPY --from=builder /eagle-scout /usr/local/bin/eagle-scout
 
