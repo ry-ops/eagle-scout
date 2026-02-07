@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-02-07
+
+### Added
+- Documented native multi-arch support (linux/amd64, linux/arm64) in README
+- Docker images now explicitly noted as working natively on Intel and Apple Silicon
+
+### Fixed
+- Clarified multi-arch image availability for ARM-based systems (e.g., Apple M1/M2/M3)
+
 ## [1.2.0] - 2026-02-07
 
 ### Fixed
@@ -73,7 +82,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-[Unreleased]: https://github.com/ry-ops/eagle-scout/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/ry-ops/eagle-scout/compare/v1.2.1...HEAD
+[1.2.1]: https://github.com/ry-ops/eagle-scout/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/ry-ops/eagle-scout/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/ry-ops/eagle-scout/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/ry-ops/eagle-scout/releases/tag/v1.0.0

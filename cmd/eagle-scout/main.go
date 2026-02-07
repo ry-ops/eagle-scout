@@ -8,7 +8,7 @@ import (
 	"github.com/ry-ops/eagle-scout/internal/mcp"
 )
 
-var version = "1.2.0"
+var version = "1.2.1"
 
 func main() {
 	if len(os.Args) > 1 {
