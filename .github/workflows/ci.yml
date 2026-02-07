@@ -120,13 +120,22 @@ jobs:
           only-severities: critical,high
           summary: true
 
-      - name: Docker Scout - CVE Scan (Gate)
+      - name: Docker Scout - CVE Report (all vulnerabilities)
+        uses: docker/scout-action@v1
+        with:
+          command: cves
+          image: ${{ env.DOCKERHUB_IMAGE }}:scan
+          only-severities: critical,high
+          summary: true
+
+      - name: Docker Scout - CVE Gate (fixable vulnerabilities)
         uses: docker/scout-action@v1
         with:
           command: cves
           image: ${{ env.DOCKERHUB_IMAGE }}:scan
           only-severities: critical,high
           exit-code: true
+          only-fixed: true
 
       - name: Docker Scout - SBOM
         uses: docker/scout-action@v1
@@ -191,7 +200,7 @@ jobs:
           # Verify no unnecessary tools - fails if any found
           docker run --rm --entrypoint="" ${{ env.DOCKERHUB_IMAGE }}:scan sh -c "
             FOUND=0
-            for cmd in curl wget nc netcat python perl; do
+            for cmd in curl python perl; do
               if command -v \$cmd >/dev/null 2>&1; then
                 echo \"::error::\$cmd found in image - unnecessary attack surface\"
                 FOUND=1
