@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.4] - 2026-02-07
+
+### Security
+- Pinned base image to `docker:29.2.1-cli` (Docker CLI built with Go 1.25.6+)
+  - CVE-2025-61726 (high 7.5) - FIXED
+  - CVE-2025-61728 (medium 6.5) - FIXED
+  - CVE-2025-61730 (medium 5.3) - FIXED
+- Upgraded Alpine expat to 2.7.4-r0
+  - CVE-2026-25210 (medium 6.9) - FIXED
+- Pinned Docker Scout CLI to v1.19.0 for reproducibility
+- Remaining 5 medium CVEs in Scout CLI dependencies (go-tuf, sigstore, rekor) require upstream update
+
 ## [1.2.3] - 2026-02-07
 
 ### Changed
@@ -96,7 +108,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-[Unreleased]: https://github.com/ry-ops/eagle-scout/compare/v1.2.3...HEAD
+[Unreleased]: https://github.com/ry-ops/eagle-scout/compare/v1.2.4...HEAD
+[1.2.4]: https://github.com/ry-ops/eagle-scout/compare/v1.2.3...v1.2.4
 [1.2.3]: https://github.com/ry-ops/eagle-scout/compare/v1.2.2...v1.2.3
 [1.2.2]: https://github.com/ry-ops/eagle-scout/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/ry-ops/eagle-scout/compare/v1.2.0...v1.2.1
