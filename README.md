@@ -6,9 +6,9 @@
 
 **MCP Server for Docker Scout** - Container security scanning via Model Context Protocol.
 
-[![Docker Scout Grade](https://img.shields.io/badge/Docker_Scout-Grade_A-success)](https://hub.docker.com/r/ryops/eagle-scout)
-[![Security](https://img.shields.io/badge/vulnerabilities-14-yellow)](https://github.com/ry-ops/eagle-scout/blob/main/SECURITY_FIXES.md)
-[![Version](https://img.shields.io/badge/version-1.1.1-blue)](https://github.com/ry-ops/eagle-scout/releases/tag/v1.1.1)
+[![CI](https://github.com/ry-ops/eagle-scout/actions/workflows/ci.yml/badge.svg)](https://github.com/ry-ops/eagle-scout/actions/workflows/ci.yml)
+[![Version](https://img.shields.io/badge/version-1.2.0-blue)](https://github.com/ry-ops/eagle-scout/releases/tag/v1.2.0)
+[![Docker Hub](https://img.shields.io/badge/Docker_Hub-ryops%2Feagle--scout-blue)](https://hub.docker.com/r/ryops/eagle-scout)
 
 Part of the [ry-ops](https://github.com/ry-ops) fabric ecosystem.
 
@@ -30,6 +30,9 @@ eagle-scout acts as a bridge between AI assistants and Docker Scout, translating
 - **Policy Evaluation** - Check images against security policies
 - **Attestations** - Manage supply chain attestations
 - **VEX Management** - Vulnerability Exploitability eXchange
+- **Environment Management** - List and set Scout environments
+- **Cache Management** - Manage local Scout cache
+- **Continuous Monitoring** - Enable/disable Scout watch
 
 ## Prerequisites
 
@@ -38,21 +41,27 @@ eagle-scout acts as a bridge between AI assistants and Docker Scout, translating
 
 ## Installation
 
+### Docker (recommended)
+
+```bash
+docker pull ryops/eagle-scout:1.2.0
+```
+
+Also available on GitHub Container Registry:
+
+```bash
+docker pull ghcr.io/ry-ops/eagle-scout:1.2.0
+```
+
 ### From Source
 
 ```bash
 go install github.com/ry-ops/eagle-scout/cmd/eagle-scout@latest
 ```
 
-### Docker
-
-```bash
-docker pull ryops/eagle-scout:latest
-```
-
 ### Binary Release
 
-Download from [Releases](https://github.com/ry-ops/eagle-scout/releases).
+Download from [Releases](https://github.com/ry-ops/eagle-scout/releases/tag/v1.2.0) — available for Linux, macOS, and Windows (amd64/arm64).
 
 ## Usage
 
@@ -64,20 +73,20 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 {
   "mcpServers": {
     "eagle-scout": {
-      "command": "eagle-scout"
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "-v", "/var/run/docker.sock:/var/run/docker.sock", "ryops/eagle-scout:1.2.0"]
     }
   }
 }
 ```
 
-Or with Docker:
+Or with a local binary:
 
 ```json
 {
   "mcpServers": {
     "eagle-scout": {
-      "command": "docker",
-      "args": ["run", "-i", "--rm", "-v", "/var/run/docker.sock:/var/run/docker.sock", "ryops/eagle-scout"]
+      "command": "eagle-scout"
     }
   }
 }
@@ -95,8 +104,11 @@ Or with Docker:
 | `scout_policy` | Evaluate images against security policies |
 | `scout_attestation` | Manage attestations on images |
 | `scout_repo` | Enable/disable Scout on repositories |
-| `scout_vex` | Manage VEX statements |
-| `scout_version` | Get Docker Scout version info |
+| `scout_vex` | Manage VEX statements (add/list) |
+| `scout_environment` | Manage environments (list/set) |
+| `scout_cache` | Manage local cache (df/prune) |
+| `scout_enroll` | Enroll organization with Docker Scout |
+| `scout_watch` | Enable/disable continuous monitoring |
 
 ## Examples
 
@@ -123,6 +135,17 @@ Or with Docker:
 ```
 > Use scout_recommendations to see if there's a better base image for my-app:latest
 ```
+
+## CI/CD
+
+All pushes to `main` run through security gates before publishing:
+
+- **Build & Test** - Compile and run tests
+- **Security Scan** - Docker Scout CVE scanning (blocks on critical/high CVEs)
+- **Policy Check** - Non-root user, no secrets, minimal attack surface
+- **Multi-arch Verify** - Validates linux/amd64 and linux/arm64 builds
+
+On merge to `main`, multi-arch images are published to Docker Hub and GHCR. Version tags (`v*`) trigger full releases with binaries for 5 platforms.
 
 ## Fabric Ecosystem
 
@@ -152,29 +175,12 @@ go build -o eagle-scout ./cmd/eagle-scout
 go test ./...
 ```
 
-## Security
-
-eagle-scout v1.1.1 includes important security updates:
-- **Go 1.25.7** - Fixes 3 stdlib vulnerabilities (including 1 HIGH severity)
-- **Updated base image** - Latest Docker CLI with security patches
-- **Vulnerability reduction** - 30% reduction (20 → 14), 100% HIGH severity elimination
-
-See [SECURITY_FIXES.md](SECURITY_FIXES.md) for details.
-
-## Docker Hub Auto-Build
-
-This repository is connected to Docker Hub. Any push to `main` automatically triggers a new build:
-- Latest commit → `ryops/eagle-scout:latest`
-- Version tags → `ryops/eagle-scout:v1.1.1`
-
 ## License
 
 MIT License - see [LICENSE](LICENSE) file.
 
 ---
 
-**Docker Hub:** [ryops/eagle-scout](https://hub.docker.com/r/ryops/eagle-scout)
+**Docker Hub:** [ryops/eagle-scout](https://hub.docker.com/r/ryops/eagle-scout) | **GHCR:** [ghcr.io/ry-ops/eagle-scout](https://github.com/ry-ops/eagle-scout/pkgs/container/eagle-scout)
 
-**Version:** 1.1.1
-
-**Status:** Alpha
+**Version:** 1.2.0
