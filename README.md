@@ -8,6 +8,7 @@
 
 [![CI](https://github.com/ry-ops/eagle-scout/actions/workflows/ci.yml/badge.svg)](https://github.com/ry-ops/eagle-scout/actions/workflows/ci.yml)
 [![Version](https://img.shields.io/badge/version-1.2.5-blue)](https://github.com/ry-ops/eagle-scout/releases/tag/v1.2.5)
+[![Go](https://img.shields.io/badge/Go-1.25-00ADD8?logo=go&logoColor=white)](https://go.dev/)
 [![Docker Hub](https://img.shields.io/badge/Docker_Hub-ryops%2Feagle--scout-blue)](https://hub.docker.com/r/ryops/eagle-scout)
 
 Part of the [ry-ops](https://github.com/ry-ops) fabric ecosystem.
