@@ -128,14 +128,14 @@ jobs:
           only-severities: critical,high
           summary: true
 
-      - name: Docker Scout - CVE Gate (fixable vulnerabilities)
+      - name: Docker Scout - CVE Gate (excluding base image)
         uses: docker/scout-action@v1
         with:
           command: cves
           image: ${{ env.DOCKERHUB_IMAGE }}:scan
           only-severities: critical,high
           exit-code: true
-          only-fixed: true
+          ignore-base: true
 
       - name: Docker Scout - SBOM
         uses: docker/scout-action@v1
