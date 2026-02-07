@@ -7,17 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
+## [1.2.0] - 2026-02-07
+
+### Fixed
+- Policy checks (secrets detection, attack surface) now properly fail the build instead of silently passing
+- CVE gate now blocks on ALL critical/high CVEs, not just those with available fixes
+- Multi-arch builds (linux/amd64, linux/arm64) now verified in CI on every push/PR
+- Publish step now builds multi-arch images instead of single-arch
+- Release workflow artifact download no longer picks up Docker buildx cache artifacts
+- Security scan builds without Docker layer cache to prevent stale CVE false passes
+
+### Changed
+- Branch protection now enforces admin compliance (no bypass)
 - CI/CD pipeline with security gates
-- Pull request template
-- CHANGELOG.md for tracking changes
-- CONTRIBUTING.md guidelines
-- SECURITY.md policy
-- Branch protection documentation
 - SonarCloud integration for code quality analysis
 - GitHub Releases with multi-platform binaries (linux/darwin/windows, amd64/arm64)
 - GitHub Container Registry (GHCR) publishing alongside Docker Hub
-- Multi-architecture Docker images (linux/amd64, linux/arm64)
 
 ## [1.1.0] - 2026-02-05
 
@@ -68,6 +73,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-[Unreleased]: https://github.com/ry-ops/eagle-scout/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/ry-ops/eagle-scout/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/ry-ops/eagle-scout/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/ry-ops/eagle-scout/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/ry-ops/eagle-scout/releases/tag/v1.0.0

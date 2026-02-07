@@ -34,8 +34,8 @@ main
 - [x] **Require linear history**
   - Prevents merge commits, enforces squash or rebase
 
-- [ ] **Include administrators**
-  - Optional: Enable to enforce rules on admins too
+- [x] **Include administrators**
+  - Enforces rules on admins — prevents bypassing security gates
 
 #### Rules applied to everyone including administrators
 
@@ -55,7 +55,7 @@ main
 gh api repos/ry-ops/eagle-scout/branches/main/protection \
   --method PUT \
   --field required_status_checks='{"strict":true,"contexts":["Build & Test","Security Scan","Policy Check"]}' \
-  --field enforce_admins=false \
+  --field enforce_admins=true \
   --field required_pull_request_reviews='{"dismiss_stale_reviews":true,"require_code_owner_reviews":false,"required_approving_review_count":1}' \
   --field restrictions=null \
   --field required_linear_history=true \
