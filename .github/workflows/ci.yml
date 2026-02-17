@@ -6,6 +6,9 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: read
+
 env:
   DOCKERHUB_IMAGE: ryops/eagle-scout
   GHCR_IMAGE: ghcr.io/ry-ops/eagle-scout
