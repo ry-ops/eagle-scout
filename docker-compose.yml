@@ -1,0 +1,15 @@
+services:
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DOCKER_API_VERSION=1.44                 # minimum API version required
+      - WATCHTOWER_SCHEDULE=0 0 3 * * *        # 3am daily
+      - WATCHTOWER_CLEANUP=true                 # remove old images after update
+      - WATCHTOWER_INCLUDE_STOPPED=true         # update stopped/exited containers too
+      - WATCHTOWER_REVIVE_STOPPED=false         # don't restart stopped containers after update
+      - WATCHTOWER_POLL_INTERVAL=86400          # fallback poll: 24h
+    command: ryops/eagle-scout
