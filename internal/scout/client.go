@@ -674,9 +674,28 @@ func (c *Client) Version() (*VersionInfo, error) {
 		return nil, err
 	}
 
-	return &VersionInfo{
-		Version: strings.TrimSpace(output),
-	}, nil
+	info := &VersionInfo{}
+	for _, line := range strings.Split(output, "\n") {
+		line = strings.TrimSpace(line)
+		if strings.HasPrefix(line, "version:") {
+			// e.g. "version: v1.19.0 (go1.25.0 - linux/arm64)"
+			raw := strings.TrimSpace(strings.TrimPrefix(line, "version:"))
+			// Split version from the parenthetical build info
+			if i := strings.Index(raw, " ("); i != -1 {
+				info.Version = raw[:i]
+				inner := strings.Trim(raw[i:], " ()")
+				// inner: "go1.25.0 - linux/arm64"
+				if parts := strings.SplitN(inner, " - ", 2); len(parts) == 2 {
+					info.GoVersion = parts[0]
+					info.Platform = parts[1]
+				}
+			} else {
+				info.Version = raw
+			}
+		}
+	}
+
+	return info, nil
 }
 
 // run executes a docker command and returns output
