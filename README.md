@@ -7,7 +7,7 @@
 **MCP Server for Docker Scout** - Container security scanning via Model Context Protocol.
 
 [![CI](https://github.com/ry-ops/eagle-scout/actions/workflows/ci.yml/badge.svg)](https://github.com/ry-ops/eagle-scout/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-1.2.5-blue)](https://github.com/ry-ops/eagle-scout/releases/tag/v1.2.5)
+[![Version](https://img.shields.io/badge/version-1.2.8-blue)](https://github.com/ry-ops/eagle-scout/releases/tag/v1.2.8)
 [![Go](https://img.shields.io/badge/Go-1.25-00ADD8?logo=go&logoColor=white)](https://go.dev/)
 [![Docker Hub](https://img.shields.io/badge/Docker_Hub-ryops%2Feagle--scout-blue)](https://hub.docker.com/r/ryops/eagle-scout)
 
@@ -35,6 +35,30 @@ eagle-scout acts as a bridge between AI assistants and Docker Scout, translating
 - **Cache Management** - Manage local Scout cache
 - **Continuous Monitoring** - Enable/disable Scout watch
 
+## Docker Desktop Extension
+
+eagle-scout ships a companion Docker Desktop extension that brings security scanning directly into the Docker Desktop UI — no CLI required.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/ry-ops/eagle-scout-extension/main/eagle-scout.svg" alt="Eagle Scout Extension" width="80"/>
+</p>
+
+**Install the extension:**
+
+```bash
+docker extension install ryops/eagle-scout-extension:latest
+```
+
+The extension provides:
+
+- **Image picker** — select any local image from a dropdown
+- **One-click scan** — Quickview, CVEs, and Recommendations all populate at once
+- **Quickview tab** — vulnerability summary (critical/high/medium/low counts)
+- **CVEs tab** — full vulnerability list with package details and fix versions
+- **Recommendations tab** — base image update suggestions from Docker Scout, with a plain-language alert for images built without provenance attestations
+
+> Source: [ry-ops/eagle-scout-extension](https://github.com/ry-ops/eagle-scout-extension)
+
 ## Prerequisites
 
 - Docker Desktop 4.17+ (includes Docker Scout)
@@ -42,18 +66,24 @@ eagle-scout acts as a bridge between AI assistants and Docker Scout, translating
 
 ## Installation
 
-### Docker (recommended)
+### Docker Desktop Extension (recommended for local use)
+
+```bash
+docker extension install ryops/eagle-scout-extension:latest
+```
+
+### MCP Server via Docker
 
 Multi-arch images are published for `linux/amd64` and `linux/arm64` — works natively on Intel and Apple Silicon.
 
 ```bash
-docker pull ryops/eagle-scout:1.2.5
+docker pull ryops/eagle-scout:1.2.8
 ```
 
 Also available on GitHub Container Registry:
 
 ```bash
-docker pull ghcr.io/ry-ops/eagle-scout:1.2.5
+docker pull ghcr.io/ry-ops/eagle-scout:1.2.8
 ```
 
 ### From Source
@@ -64,9 +94,9 @@ go install github.com/ry-ops/eagle-scout/cmd/eagle-scout@latest
 
 ### Binary Release
 
-Download from [Releases](https://github.com/ry-ops/eagle-scout/releases/tag/v1.2.5) — available for Linux, macOS, and Windows (amd64/arm64).
+Download from [Releases](https://github.com/ry-ops/eagle-scout/releases/tag/v1.2.8) — available for Linux, macOS, and Windows (amd64/arm64).
 
-## Usage
+## MCP Usage
 
 ### Claude Desktop
 
@@ -77,22 +107,16 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
   "mcpServers": {
     "eagle-scout": {
       "command": "docker",
-      "args": ["run", "-i", "--rm", "-v", "/var/run/docker.sock:/var/run/docker.sock", "ryops/eagle-scout:1.2.5"]
+      "args": ["run", "-i", "--rm", "-v", "/var/run/docker.sock:/var/run/docker.sock", "ryops/eagle-scout:1.2.8"]
     }
   }
 }
 ```
 
-Or with a local binary:
+### Claude Code
 
-```json
-{
-  "mcpServers": {
-    "eagle-scout": {
-      "command": "eagle-scout"
-    }
-  }
-}
+```bash
+claude mcp add eagle-scout --transport stdio -- docker run -i --rm -v /var/run/docker.sock:/var/run/docker.sock ryops/eagle-scout:latest
 ```
 
 ## MCP Tools
@@ -139,6 +163,16 @@ Or with a local binary:
 > Use scout_recommendations to see if there's a better base image for my-app:latest
 ```
 
+## Automatic Updates
+
+eagle-scout ships a `docker-compose.yml` with [Watchtower](https://containrrr.dev/watchtower/) configured to pull the latest image nightly:
+
+```bash
+docker compose up -d
+```
+
+Watchtower checks for updates every night at 3am and cleans up old images automatically.
+
 ## CI/CD
 
 All pushes to `main` run through security gates before publishing:
@@ -148,7 +182,7 @@ All pushes to `main` run through security gates before publishing:
 - **Policy Check** - Non-root user, no secrets, minimal attack surface
 - **Multi-arch Verify** - Validates linux/amd64 and linux/arm64 builds
 
-On merge to `main`, multi-arch images are published to Docker Hub and GHCR. Version tags (`v*`) trigger full releases with binaries for 5 platforms.
+On merge to `main`, multi-arch images are published to Docker Hub and GHCR with `provenance=mode=max` and SBOM attestations. Version tags (`v*`) trigger full releases with binaries for 5 platforms.
 
 ## Fabric Ecosystem
 
@@ -160,6 +194,7 @@ eagle-scout is part of the ry-ops fabric:
 | [aiana](https://github.com/ry-ops/aiana) | Python | Semantic memory |
 | [n8n-fabric](https://github.com/ry-ops/n8n-fabric) | Python | Workflow automation |
 | **eagle-scout** | Go | Container security |
+| [eagle-scout-extension](https://github.com/ry-ops/eagle-scout-extension) | Go + HTML | Docker Desktop UI |
 
 ## Development
 
@@ -184,6 +219,6 @@ MIT License - see [LICENSE](LICENSE) file.
 
 ---
 
-**Docker Hub:** [ryops/eagle-scout](https://hub.docker.com/r/ryops/eagle-scout) | **GHCR:** [ghcr.io/ry-ops/eagle-scout](https://github.com/ry-ops/eagle-scout/pkgs/container/eagle-scout)
+**Docker Hub:** [ryops/eagle-scout](https://hub.docker.com/r/ryops/eagle-scout) | **GHCR:** [ghcr.io/ry-ops/eagle-scout](https://github.com/ry-ops/eagle-scout/pkgs/container/eagle-scout) | **Extension:** [ryops/eagle-scout-extension](https://hub.docker.com/r/ryops/eagle-scout-extension)
 
-**Version:** 1.2.5
+**Version:** 1.2.8
