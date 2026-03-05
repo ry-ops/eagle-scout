@@ -107,7 +107,12 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
   "mcpServers": {
     "eagle-scout": {
       "command": "docker",
-      "args": ["run", "-i", "--rm", "-v", "/var/run/docker.sock:/var/run/docker.sock", "ryops/eagle-scout:1.2.8"]
+      "args": [
+        "run", "-i", "--rm",
+        "-v", "/var/run/docker.sock:/var/run/docker.sock",
+        "-v", "${HOME}/.docker/config.json:/root/.docker/config.json:ro",
+        "ryops/eagle-scout:1.2.8"
+      ]
     }
   }
 }
@@ -116,7 +121,10 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 ### Claude Code
 
 ```bash
-claude mcp add eagle-scout --transport stdio -- docker run -i --rm -v /var/run/docker.sock:/var/run/docker.sock ryops/eagle-scout:latest
+claude mcp add eagle-scout --transport stdio -- docker run -i --rm \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v ~/.docker/config.json:/root/.docker/config.json:ro \
+  ryops/eagle-scout:latest
 ```
 
 ## MCP Tools
