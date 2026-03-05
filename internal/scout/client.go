@@ -43,17 +43,26 @@ type CVEResult struct {
 	URL         string `json:"url,omitempty"`
 }
 
+// UnfixedCVE represents a CVE with no upstream fix available
+type UnfixedCVE struct {
+	ID       string `json:"id"`
+	Severity string `json:"severity"`
+	Package  string `json:"package"`
+}
+
 // CVEsOutput represents the output of scout cves
 type CVEsOutput struct {
-	Image          string      `json:"image"`
-	TotalVulns     int         `json:"total_vulnerabilities"`
-	Critical       int         `json:"critical"`
-	High           int         `json:"high"`
-	Medium         int         `json:"medium"`
-	Low            int         `json:"low"`
-	Unspecified    int         `json:"unspecified"`
-	Vulnerabilities []CVEResult `json:"vulnerabilities,omitempty"`
-	RawOutput      string      `json:"raw_output,omitempty"`
+	Image           string       `json:"image"`
+	TotalVulns      int          `json:"total_vulnerabilities"`
+	Critical        int          `json:"critical"`
+	High            int          `json:"high"`
+	Medium          int          `json:"medium"`
+	Low             int          `json:"low"`
+	Unspecified     int          `json:"unspecified"`
+	Vulnerabilities []CVEResult  `json:"vulnerabilities,omitempty"`
+	UpstreamBlocked []UnfixedCVE `json:"upstream_blocked,omitempty"`
+	VexSuggestion   string       `json:"vex_suggestion,omitempty"`
+	RawOutput       string       `json:"raw_output,omitempty"`
 }
 
 // CVEs scans an image for CVEs
@@ -93,6 +102,9 @@ func (c *Client) CVEs(image string, opts CVEsOptions) (*CVEsOutput, error) {
 
 	// Parse summary counts from output
 	c.parseCVECounts(output, result)
+
+	// Detect upstream-blocked CVEs (no fix available)
+	c.parseUnfixedCVEs(output, result)
 
 	return result, nil
 }
@@ -748,6 +760,75 @@ func (c *Client) parseCVECounts(output string, result *CVEsOutput) {
 		}
 	}
 	result.TotalVulns = result.Critical + result.High + result.Medium + result.Low
+}
+
+// parseUnfixedCVEs detects CVEs with "not fixed" status from scout cves output
+func (c *Client) parseUnfixedCVEs(output string, result *CVEsOutput) {
+	lines := strings.Split(output, "\n")
+	var currentSeverity, currentCVE, currentPkg string
+
+	for _, line := range lines {
+		trimmed := strings.TrimSpace(line)
+
+		// Track current package context: "0C     2H     1M     0L  jq 1.7.1-r0"
+		// Package lines have severity counts followed by package name
+		if strings.Contains(trimmed, "C") && strings.Contains(trimmed, "H") && strings.Contains(trimmed, "M") && strings.Contains(trimmed, "L") {
+			parts := strings.Fields(trimmed)
+			if len(parts) >= 5 {
+				// Last two fields are package name and version
+				currentPkg = parts[len(parts)-2]
+			}
+		}
+
+		// Track CVE lines: "✗ HIGH CVE-2024-53427" or "✗ MEDIUM CVE-2025-14017"
+		if strings.Contains(trimmed, "CVE-") {
+			for _, sev := range []string{"CRITICAL", "HIGH", "MEDIUM", "LOW"} {
+				if strings.Contains(trimmed, sev) {
+					currentSeverity = strings.ToLower(sev)
+					// Extract CVE ID
+					idx := strings.Index(trimmed, "CVE-")
+					if idx != -1 {
+						cveID := trimmed[idx:]
+						// Trim anything after the CVE ID
+						if spaceIdx := strings.IndexByte(cveID, ' '); spaceIdx != -1 {
+							cveID = cveID[:spaceIdx]
+						}
+						currentCVE = cveID
+					}
+					break
+				}
+			}
+		}
+
+		// Detect "Fixed version  : not fixed"
+		if strings.Contains(trimmed, "Fixed version") && strings.Contains(trimmed, "not fixed") {
+			if currentCVE != "" {
+				result.UpstreamBlocked = append(result.UpstreamBlocked, UnfixedCVE{
+					ID:       currentCVE,
+					Severity: currentSeverity,
+					Package:  currentPkg,
+				})
+			}
+		}
+	}
+
+	if len(result.UpstreamBlocked) > 0 && len(result.UpstreamBlocked) == result.TotalVulns {
+		result.VexSuggestion = fmt.Sprintf(
+			"All %d CVEs are upstream-blocked with no fix available. "+
+				"Consider creating VEX (Vulnerability Exploitability eXchange) statements to mark these as 'not_affected' "+
+				"so they don't impact your Docker Scout policy grade. "+
+				"Use scout_vex with action 'add', status 'not_affected', and justification 'vulnerable_code_not_in_execute_path' for each CVE.",
+			len(result.UpstreamBlocked),
+		)
+	} else if len(result.UpstreamBlocked) > 0 {
+		result.VexSuggestion = fmt.Sprintf(
+			"%d of %d CVEs are upstream-blocked with no fix available. "+
+				"Consider creating VEX statements for these unfixed CVEs to mark them as 'not_affected' "+
+				"so they don't impact your Docker Scout policy grade. "+
+				"Use scout_vex with action 'add', status 'not_affected', and justification 'vulnerable_code_not_in_execute_path' for each CVE.",
+			len(result.UpstreamBlocked), result.TotalVulns,
+		)
+	}
 }
 
 // parseQuickview parses quickview output
