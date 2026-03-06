@@ -7,7 +7,7 @@
 **MCP Server for Docker Scout** - Container security scanning via Model Context Protocol.
 
 [![CI](https://github.com/ry-ops/eagle-scout/actions/workflows/ci.yml/badge.svg)](https://github.com/ry-ops/eagle-scout/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-1.2.8-blue)](https://github.com/ry-ops/eagle-scout/releases/tag/v1.2.8)
+[![Version](https://img.shields.io/badge/version-1.2.9-blue)](https://github.com/ry-ops/eagle-scout/releases/tag/v1.2.9)
 [![Go](https://img.shields.io/badge/Go-1.25-00ADD8?logo=go&logoColor=white)](https://go.dev/)
 [![Docker Hub](https://img.shields.io/badge/Docker_Hub-ryops%2Feagle--scout-blue)](https://hub.docker.com/r/ryops/eagle-scout)
 
@@ -77,13 +77,13 @@ docker extension install ryops/eagle-scout-extension:latest
 Multi-arch images are published for `linux/amd64` and `linux/arm64` — works natively on Intel and Apple Silicon.
 
 ```bash
-docker pull ryops/eagle-scout:1.2.8
+docker pull ryops/eagle-scout:1.2.9
 ```
 
 Also available on GitHub Container Registry:
 
 ```bash
-docker pull ghcr.io/ry-ops/eagle-scout:1.2.8
+docker pull ghcr.io/ry-ops/eagle-scout:1.2.9
 ```
 
 ### From Source
@@ -94,7 +94,7 @@ go install github.com/ry-ops/eagle-scout/cmd/eagle-scout@latest
 
 ### Binary Release
 
-Download from [Releases](https://github.com/ry-ops/eagle-scout/releases/tag/v1.2.8) — available for Linux, macOS, and Windows (amd64/arm64).
+Download from [Releases](https://github.com/ry-ops/eagle-scout/releases/tag/v1.2.9) — available for Linux, macOS, and Windows (amd64/arm64).
 
 ## MCP Usage
 
@@ -111,7 +111,7 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
         "run", "-i", "--rm",
         "-v", "/var/run/docker.sock:/var/run/docker.sock",
         "-v", "${HOME}/.docker/config.json:/root/.docker/config.json:ro",
-        "ryops/eagle-scout:1.2.8"
+        "ryops/eagle-scout:1.2.9"
       ]
     }
   }
@@ -229,4 +229,4 @@ MIT License - see [LICENSE](LICENSE) file.
 
 **Docker Hub:** [ryops/eagle-scout](https://hub.docker.com/r/ryops/eagle-scout) | **GHCR:** [ghcr.io/ry-ops/eagle-scout](https://github.com/ry-ops/eagle-scout/pkgs/container/eagle-scout) | **Extension:** [ryops/eagle-scout-extension](https://hub.docker.com/r/ryops/eagle-scout-extension)
 
-**Version:** 1.2.8
+**Version:** 1.2.9
