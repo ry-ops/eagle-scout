@@ -745,18 +745,59 @@ func (c *Client) runJSON(v interface{}, args ...string) error {
 func (c *Client) parseCVECounts(output string, result *CVEsOutput) {
 	lines := strings.Split(output, "\n")
 	for _, line := range lines {
-		line = strings.ToLower(line)
-		if strings.Contains(line, "critical") {
-			fmt.Sscanf(line, "%d critical", &result.Critical)
+		trimmed := strings.TrimSpace(line)
+		lower := strings.ToLower(trimmed)
+
+		// Match summary block format: "  CRITICAL  0" or "  HIGH      2"
+		if strings.HasPrefix(lower, "critical") {
+			fields := strings.Fields(trimmed)
+			if len(fields) >= 2 {
+				fmt.Sscanf(fields[len(fields)-1], "%d", &result.Critical)
+			}
 		}
-		if strings.Contains(line, "high") {
-			fmt.Sscanf(line, "%d high", &result.High)
+		if strings.HasPrefix(lower, "high") {
+			fields := strings.Fields(trimmed)
+			if len(fields) >= 2 {
+				fmt.Sscanf(fields[len(fields)-1], "%d", &result.High)
+			}
 		}
-		if strings.Contains(line, "medium") {
-			fmt.Sscanf(line, "%d medium", &result.Medium)
+		if strings.HasPrefix(lower, "medium") {
+			fields := strings.Fields(trimmed)
+			if len(fields) >= 2 {
+				fmt.Sscanf(fields[len(fields)-1], "%d", &result.Medium)
+			}
 		}
-		if strings.Contains(line, "low") {
-			fmt.Sscanf(line, "%d low", &result.Low)
+		if strings.HasPrefix(lower, "low") && !strings.HasPrefix(lower, "lowest") {
+			fields := strings.Fields(trimmed)
+			if len(fields) >= 2 {
+				fmt.Sscanf(fields[len(fields)-1], "%d", &result.Low)
+			}
+		}
+
+		// Also match inline format: "0C     2H     8M     2L"
+		if strings.Contains(trimmed, "C") && strings.Contains(trimmed, "H") &&
+			strings.Contains(trimmed, "M") && strings.Contains(trimmed, "L") &&
+			strings.Contains(lower, "vulnerabilities") {
+			// This is the "vulnerabilities │    0C     2H     8M     2L" line
+			for _, field := range strings.Fields(trimmed) {
+				if len(field) >= 2 {
+					suffix := field[len(field)-1:]
+					numStr := field[:len(field)-1]
+					var val int
+					if n, _ := fmt.Sscanf(numStr, "%d", &val); n == 1 {
+						switch suffix {
+						case "C":
+							result.Critical = val
+						case "H":
+							result.High = val
+						case "M":
+							result.Medium = val
+						case "L":
+							result.Low = val
+						}
+					}
+				}
+			}
 		}
 	}
 	result.TotalVulns = result.Critical + result.High + result.Medium + result.Low
