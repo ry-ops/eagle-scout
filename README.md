@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/banner.svg" alt="eagle-scout: Docker Scout container security scanning over MCP" width="100%"></p>
+
 # eagle-scout
 
 <p align="center">
@@ -46,7 +48,9 @@ eagle-scout ships a companion Docker Desktop extension that brings security scan
 **Install the extension:**
 
 ```bash
-docker extension install ryops/eagle-scout-extension:latest
+# Not yet published to Docker Hub; build it from source:
+git clone https://github.com/ry-ops/eagle-scout-extension && cd eagle-scout-extension
+docker build -t ryops/eagle-scout-extension:dev . && docker extension install ryops/eagle-scout-extension:dev
 ```
 
 The extension provides:
@@ -227,6 +231,11 @@ MIT License - see [LICENSE](LICENSE) file.
 
 ---
 
-**Docker Hub:** [ryops/eagle-scout](https://hub.docker.com/r/ryops/eagle-scout) | **GHCR:** [ghcr.io/ry-ops/eagle-scout](https://github.com/ry-ops/eagle-scout/pkgs/container/eagle-scout) | **Extension:** [ryops/eagle-scout-extension](https://hub.docker.com/r/ryops/eagle-scout-extension)
+**Docker Hub:** [ryops/eagle-scout](https://hub.docker.com/r/ryops/eagle-scout) | **GHCR:** [ghcr.io/ry-ops/eagle-scout](https://github.com/ry-ops/eagle-scout/pkgs/container/eagle-scout) | **Extension:** [ry-ops/eagle-scout-extension](https://github.com/ry-ops/eagle-scout-extension) (build from source; not yet on Docker Hub)
 
 **Version:** 1.2.9
+
+<!-- org-footer -->
+---
+
+<p align="center"><sub>Part of <a href="https://github.com/ry-ops">ry-ops</a> · building the pipes between infrastructure, automation, and observability · built by <a href="https://github.com/ry-ops">ry-ops</a></sub></p>
