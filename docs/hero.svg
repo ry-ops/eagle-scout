@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 400" width="960" height="400" role="img" aria-labelledby="t d">
+  <title id="t">eagle-scout: container security scanning over MCP</title>
+  <desc id="d">Ask an AI assistant to scan a container image; eagle-scout runs Docker Scout and returns vulnerabilities by severity plus an SBOM. A Go MCP server bridging AI assistants and Docker Scout.</desc>
+  <defs><linearGradient id="title" x1="0" x2="1"><stop offset="0" stop-color="#00add8"/><stop offset=".5" stop-color="#3ec7ff"/><stop offset="1" stop-color="#3ddc84"/></linearGradient></defs>
+  <style>
+    text { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; fill:#e6ebf5; }
+    .muted { fill:#8b96ad; } .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+    @keyframes ask { 0%,3.00% { opacity:0; transform:translateY(8px); } 6.50%,94.00% { opacity:1; transform:translateY(0); } 97.00%,100% { opacity:0 } } .ask { animation:ask 10.0s infinite; }
+    @keyframes scan { 0%,20.00% { opacity:0; } 23.50%,94.00% { opacity:1; } 97.00%,100% { opacity:0 } } .scan { animation:scan 10.0s infinite; }
+    @keyframes b0 { 0%,42.00% { width:0 } 46.00%,96.00% { width:30px } 100% { width:0 } } .b0 { animation:b0 10.0s infinite; }
+    @keyframes n0 { 0%,45.00% { opacity:0; } 48.50%,94.00% { opacity:1; } 97.00%,100% { opacity:0 } } .n0 { animation:n0 10.0s infinite; }
+    @keyframes b1 { 0%,44.50% { width:0 } 48.50%,96.00% { width:95px } 100% { width:0 } } .b1 { animation:b1 10.0s infinite; }
+    @keyframes n1 { 0%,47.50% { opacity:0; } 51.00%,94.00% { opacity:1; } 97.00%,100% { opacity:0 } } .n1 { animation:n1 10.0s infinite; }
+    @keyframes b2 { 0%,47.00% { width:0 } 51.00%,96.00% { width:175px } 100% { width:0 } } .b2 { animation:b2 10.0s infinite; }
+    @keyframes n2 { 0%,50.00% { opacity:0; } 53.50%,94.00% { opacity:1; } 97.00%,100% { opacity:0 } } .n2 { animation:n2 10.0s infinite; }
+    @keyframes b3 { 0%,49.50% { width:0 } 53.50%,96.00% { width:55px } 100% { width:0 } } .b3 { animation:b3 10.0s infinite; }
+    @keyframes n3 { 0%,52.50% { opacity:0; } 56.00%,94.00% { opacity:1; } 97.00%,100% { opacity:0 } } .n3 { animation:n3 10.0s infinite; }
+    @keyframes sbom { 0%,66.00% { opacity:0; } 69.50%,94.00% { opacity:1; } 97.00%,100% { opacity:0 } } .sbom { animation:sbom 10.0s infinite; }
+    @media (prefers-reduced-motion: reduce) { * { animation:none !important; } [class^=b]{width:auto} }
+  </style>
+  <rect width="960" height="400" rx="20" fill="#0f1420"/>
+  <text x="40" y="58" font-size="34" font-weight="800" style="fill:url(#title)">eagle-scout</text>
+  <text x="42" y="88" font-size="16" class="muted">"Scan this image" — and Docker Scout's full report comes back, over MCP.</text>
+
+  <!-- left: ask + pipeline -->
+  <g class="ask"><rect x="40" y="150" width="250" height="34" rx="12" fill="#2a3550"/><text x="56" y="172" font-size="12.5">"Scan nginx:latest for CVEs"</text></g>
+  <g class="scan"><rect x="40" y="200" width="250" height="26" rx="8" fill="#1d2536" stroke="#00add8"/><text x="52" y="218" font-size="12" class="mono" style="fill:#7fdcf0">scout_cves → Docker Scout</text></g>
+  <rect x="40" y="250" width="250" height="90" rx="10" fill="#0b0f18" stroke="#2c3750"/>
+  <text x="56" y="276" font-size="11" class="muted">🦅 eagle-scout (Go, MCP)</text>
+  <text x="56" y="298" font-size="11" class="muted">bridges AI ⇄ Docker Scout</text>
+  <text x="56" y="320" font-size="11" class="mono muted">14 tools</text>
+
+  <!-- right: results -->
+  <rect x="560" y="150" width="175" height="200" rx="12" fill="#161d2b" stroke="#2c3750"/>
+  <text x="580" y="176" font-size="13" font-weight="700">nginx:latest · vulnerabilities</text>
+  <text x="596" y="203" font-size="11.5" class="mono" style="fill:#ff5c6e">critical</text><rect x="680" y="192" width="30" height="14" rx="4" fill="#ff5c6e" fill-opacity=".2"/><rect class="b0" x="680" y="192" width="0" height="14" rx="4" fill="#ff5c6e"/><text class="n0" x="896" y="203" text-anchor="end" font-size="12" font-weight="700" style="fill:#ff5c6e">3</text><text x="596" y="237" font-size="11.5" class="mono" style="fill:#ff9f1c">high</text><rect x="680" y="226" width="95" height="14" rx="4" fill="#ff9f1c" fill-opacity=".2"/><rect class="b1" x="680" y="226" width="0" height="14" rx="4" fill="#ff9f1c"/><text class="n1" x="896" y="237" text-anchor="end" font-size="12" font-weight="700" style="fill:#ff9f1c">11</text><text x="596" y="271" font-size="11.5" class="mono" style="fill:#ffd500">medium</text><rect x="680" y="260" width="175" height="14" rx="4" fill="#ffd500" fill-opacity=".2"/><rect class="b2" x="680" y="260" width="0" height="14" rx="4" fill="#ffd500"/><text class="n2" x="896" y="271" text-anchor="end" font-size="12" font-weight="700" style="fill:#ffd500">24</text><text x="596" y="305" font-size="11.5" class="mono" style="fill:#3ddc84">low</text><rect x="680" y="294" width="55" height="14" rx="4" fill="#3ddc84" fill-opacity=".2"/><rect class="b3" x="680" y="294" width="0" height="14" rx="4" fill="#3ddc84"/><text class="n3" x="896" y="305" text-anchor="end" font-size="12" font-weight="700" style="fill:#3ddc84">8</text>
+  <g class="sbom"><rect x="580" y="316" width="320" height="22" rx="6" fill="#10283a" stroke="#3ec7ff" stroke-opacity=".5"/><text x="592" y="331" font-size="10.5" class="mono" style="fill:#8fd6ff">+ SBOM · VEX · recommendations</text></g>
+</svg>
